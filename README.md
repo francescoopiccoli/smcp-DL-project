@@ -11,6 +11,8 @@ The main goals of our project are:
 - Test different hyperparameters settings, specifically for pruning-ratio, rewiring frequencies, and learning rate schedule, compare the results.
 - Running an ablation study by removing the warmup epochs.
 
+For more information, check the full blog post at: https://francescoopiccoli.github.io/smcp-group73.github.io/
+
 ## Authors
 
 Marcus Plesner
