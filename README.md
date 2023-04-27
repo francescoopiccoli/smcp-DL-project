@@ -21,4 +21,4 @@ Aranya Sinha
 
 ## User Manual
 
-Download the <code>training.ipynb</code> Jupyter Notebook and upload it on Colab, alternatively run it in your editor by removing colab-spefific cells. Donwload also the [repository](https://github.com/NVlabs/SMCP) of the authors and place it in the same folder as the notebook.
+Download the <code>training.ipynb</code> Jupyter Notebook and upload it on Colab, alternatively run it in your editor by removing colab-spefific cells. Donwload also the [repository](https://github.com/NVlabs/SMCP) of the authors and place it in the same folder as the notebook, in case you are running from colab, upload the original authors' repository folder on your google drive.
