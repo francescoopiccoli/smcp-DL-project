@@ -4,7 +4,7 @@
 </p>
 
 # Group 73: Deep Learning (CS4240) Project
-The project aims at reproducing the results of the <em>Soft Masking for Cost-Constrained Channel Pruning (SMCP)</em> method, proposed by Humble et al. (2022) in the [paper](https://arxiv.org/pdf/2211.02206.pdf) <em>"Soft Masking for Cost-Constrained Channel Pruning"</em> on a scaled-down architecture, specifically: a ResNet-18 architecture and on the CIFAR10 dataset. We utilized the code for the pruning developed by the authors, available at [this](https://github.com/NVlabs/SMCP) Github repo.
+The project aims at reproducing the results of the <em>Soft Masking for Cost-Constrained Channel Pruning (SMCP)</em> method, proposed by Humble et al. (2022) in the [paper](https://arxiv.org/pdf/2211.02206.pdf) <em>"Soft Masking for Cost-Constrained Channel Pruning"</em> on a scaled-down architecture, specifically: a ResNet-18 model trained and tested on the CIFAR10 dataset. We utilized the code for the pruning developed by the authors, available at [this](https://github.com/NVlabs/SMCP) Github repo.
 
 The main goals of our project are:
 - Apply the SCMP method on a scaled-down architecture, and on a smaller dataset, and compare the results to those obtained in the paper.
