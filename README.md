@@ -26,6 +26,6 @@ Aranya Sinha
 Download the <code>training.ipynb</code> Jupyter Notebook and upload it on Colab, alternatively run it in your editor by removing colab-specific code cells, download also the [repository](https://github.com/NVlabs/SMCP) of the authors and place it in the same folder as the notebook, in case you are running from colab, upload the original authors' repository folder on your google drive.
 
 ## Results
-![a](https://raw.githubusercontent.com/francescoopiccoli/smcp-DL-project/main/Images/top1_acc_pruning_ratio.png) | ![a](https://raw.githubusercontent.com/francescoopiccoli/smcp-DL-project/main/Images/top5_acc_pruning_ratio.png)
+![a](https://raw.githubusercontent.com/francescoopiccoli/smcp-DL-project/main/Images/top1_fps.png)
 
 Results obtained for different pruning ratios.
