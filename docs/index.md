@@ -47,17 +47,44 @@ As discussed in the Introduction section, there were two major differences betwe
 
 <p align="justify">
 The code was implemented on Google Colab, exploiting the computational power of the free GPU provided.
-The model was trained on **!!!n!!!** epochs. Training time was around 30 minutes. For each different SMCP method hyperparameters configuration, we logged in a csv file the respective train and test loss at each epoch, as well as the Top-1 and Top-5 class accuracy. To measure the FPS, we reutilized the function provided in the authors’ codebase.
+The model was trained on **21** epochs. Training time was around 30 minutes. For each different SMCP method hyperparameters configuration, we logged in a csv file the respective train and test loss at each epoch, as well as the Top-1 and Top-5 class accuracy. To measure the FPS, we reutilized the function provided in the authors’ codebase.
 </p>
 
 ## Results
+### Pruning ratios 
+We run several tests comparing the performance (top-1 accuracy and FPS) for different pruning ratios (from 0% to 90%) to see how the performance varies, we obtained the values showed in Figure 2.
+The overall trend is in line with that of Figure 1, namely we observe a drop in accuracy and an increase in FPS as the pruning ratio increases, despite the case for <code>pruning_ratio</code> set to 60%, where we observe an outlier value, whose causes are unknown to us. 
 
-## Discussion
+Additionally it is hard to assess whether the increase in FPS is in the same order as the one in Figure 1, as we do not have information on the pruning ratios utilized for that figure, however the increase in FPS seems to be limited compared to the decrease in accuracy, which would not encourage the utilization of the SMCP method, except for some specific values (which could be strictly related to the dataset and hyperparamaters utilized), such as from no pruning to 10% <code>pruning_ratio</code>. 
+
+It is hard however to draw general conclusions on whether SMCP does not scale to smaller architectures, as we tested only a specific scenario, and many factors could have contributed to the different performance, such as the hyperparamaters chosen for the smaller architecture, the fitting between the architecture chosen and the dataset...
+
+<p align="center" style="margin-top: 10px; margin-bottom: 10px;">
+  <img src="https://raw.githubusercontent.com/francescoopiccoli/smcp-DL-project/main/Images/top1_fps.png" alt="Top-1 Acc / FPS values for different pruning ratios.." width="45%"/>
+  <p align="center"><em>Figure 2: Top-1 Acc / FPS values for different pruning ratios.</em></p>
+</p>
+
+### Ablation study: Running without warmup epochs
+In the paper, before applying the SMCP method, a number of warmup epochs (around 1/9 of the total epochs) is set, during these epochs, the model is trained without applying SMCP, we tested whether removing the warmup phase would affect the accuracy and fps performance.
+In particular we tested the scenario with a very high pruning_ratio (0.8), to amplify the possible difference between warmup and no warmup case. 
+We obtained the following values:
+| Scenario | Top-1 Acc | FPS |
+| --------------- | --------------- | --------------- |
+| no-warmup |   | 7736  |
+| warmup  | 0,6736  | 7737  |
+
+**!!!Comment on the results when I have the top1 acc for no warmup!!!**
+
+## Discussion and Conclusion
+
+We managed to partially replicate some of the results in the paper, with several limitations and differences **!!!Discuss the results!!!**
+
+Our ablation study showed that **!!!To be finished!!!**
+
+We encoutered several technical issues and making the code run took plenty of time, this also limited our study and our ability to reproduce and investigate the paper results.  
 
 ## Distribution of the efforts
 Francesco worked partly on trying to fix the dependencies and environment issues of the authors' code, in the writing of the blog post and the setup of the repo, on running the ablation study, and contributed partly on making the new model run.
-
-## Conclusion
 
 ## References
 Humble, R., Shen, M., Latorre, J. A., Darve, E., & Alvarez, J. (2022, November). “Soft Masking for Cost-Constrained Channel Pruning”. In Computer Vision–ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23–27, 2022, Proceedings, Part XI (pp. 641-657). Cham: Springer Nature Switzerland.
