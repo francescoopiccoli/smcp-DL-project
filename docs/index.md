@@ -1,3 +1,7 @@
+Francesco Piccoli (ID: 5848474)
+Marcus Plesner (ID: 4932021)
+Aranya Sinha (ID: 5774683)
+
 # Deep learning project report
 ## Introduction
 
@@ -48,14 +52,16 @@ As discussed in the Introduction section, there were two major differences betwe
 <p align="justify">
 The code was implemented on Google Colab, exploiting the computational power of the free GPU provided.
 The model was trained on 21 epochs. Training time was around 25/30 minutes. For each different SMCP method hyperparameters configuration, we logged in a csv file the respective train and test loss at each epoch, as well as the Top-1 and Top-5 class accuracy. To measure the FPS, we reutilized the function provided in the authors’ codebase. 
+</p>
 
+<p align="justify">
 As we scaled down the model, different hyperparameters required to be reset and adapted, such changes were made in the way that seemed most apt and meaningful to us after studying the codebase, the paper and trying different setups, however we acknowledge this as a limitation given our limited expertise in the field and domain, and as we’ll discuss in the later sections we believe this could have influenced the results obtained.
 </p>
 
 ## Results
 ### Pruning ratios 
 <p align="justify">
-We ran several tests comparing the performance (top-1 accuracy and FPS) for different pruning ratios (from 0% to 90%) to see how the performance varies, and we obtained the values shown in Figure 2.
+We ran several tests (i.e. trained the model multiple times) comparing the performance (top-1 accuracy and FPS) for different pruning ratios (from 0% to 90%) to see how the performance varies, and we obtained the values shown in Figure 2.
 The overall trend is in line with that of Figure 1, namely we observe a drop in accuracy and an increase in FPS as the pruning ratio increases. The accuracy values are very similar to those of Figure 1, the FPS values are much higher, this is due to the smaller scale of our model. 
 It is hard to assess whether the increase in FPS is in the same order as the one in Figure 1, as we do not have information on the pruning ratios utilized for that figure, however the increase in FPS seems to be limited compared to the decrease in accuracy, which would not encourage the utilization of the SMCP method, except for some specific values (which could be strictly related to the dataset and hyperparameters utilized), such as from no pruning to 10% <code>pruning_ratio</code>. 
 It is difficult however to draw general conclusions on whether SMCP does not scale to smaller architectures (or it does but only for very small pruning ratio values) , as we tested only a specific scenario, and many factors could have contributed to the different performance, such as the hyperparameters chosen for the smaller architecture, the fitting between the architecture chosen and the dataset, and the smaller dataset being used.
@@ -66,14 +72,27 @@ It is difficult however to draw general conclusions on whether SMCP does not sca
   <p align="center"><em>Figure 2: Top-1 Acc / FPS values for different pruning ratios.</em></p>
 </p>
 
+### Learning rates
+
+<p align="justify">
+The other hyperparameter we used to compare performance for different values, is the learning rate, as it is one of the most critical hyperparameter to set for the model convergence. We tested different learning rates, ranging from 0.025 to 0.2, and computed the FPS and top-1 accuracy, similar to the pruning ratios, as seen in 
+We did not see any large difference in accuracy values for different learning rates, and similarly, no trend was observed for the FPS values. 
+</p>
+
+<p align="center" style="margin-top: 10px; margin-bottom: 10px;">
+  <img src="https://raw.githubusercontent.com/francescoopiccoli/smcp-DL-project/main/Images/top1_fps_lr.png" alt="Top-1 Acc / FPS values for different pruning ratios.." width="45%"/>
+  <p align="center"><em>Figure 2: Top-1 Acc / FPS values for different learning rates ratios.</em></p>
+
 ### Ablation study: Running without warmup epochs
 <p align="justify">
 In the paper, before applying the SMCP method, a number of warmup epochs (around 1/9 of the total epochs) is set, during these epochs, the model is trained without applying SMCP, we tested whether removing the warmup phase would affect the accuracy and fps performance.
 
-In particular we tested the scenario with a very high pruning_ratio (0.8), to amplify the possible difference between warmup and no warmup case. 
+In particular we tested the scenario with a very high pruning_ratio (0.8), to amplify the possible difference between warmup and no warmup case, all the other hyperparameters were kept the same, except obviously for the <code>channel_schedule_length
+</code> parameter (namely the number of epochs in which we prune), which was increased in order to keep the total number of epochs the same, namely 21.
+
 We obtained the following values:
 </p>
-<table>
+<table align="center">
   <thead>
     <tr>
       <th>Scenario</th>
@@ -105,13 +124,23 @@ Our ablation study showed that the classifier performs better when there is no w
 We managed to partially replicate some of the results in the paper, with several limitations and differences, as discussed for Figure 2 in the Implementation section. We encountered several technical issues and making the code run took plenty of time, this also limited our analysis and our ability to reproduce and investigate the paper results. Specifically, we deem that the high number of hyperparameters which required to be reset (due to the new architecture and dataset) could have influenced the results we obtained, and it would have required more tests to find proper values for such hyperparameters. 
 </p>
 
+<p align=”justify”>
+The purpose of doing a replication of this paper is due to the importance of reducing inference time for neural networks for advances in computer visions. Reducing computational resource needs has many benefits, including improved user experience, improved scalability, and environmental reasons. Due to these benefits, we deemed it a good idea to replicate this paper to validate its results. 
+</p>
+
 
 ## Distribution of the efforts
 <p align="justify">
 Francesco worked partly on trying to fix the dependencies and environment issues of the authors' code, in the writing of the blog post and the setup of the repository, on running the ablation study, and contributed partly on making the new model run.
-
-Marcus worked mainly on reproducing the paper, adapting it to the new dataset, and experimenting with different models.
+</p>
+<p align="justify">
+Marcus worked mainly on reproducing the paper, adapting it to the new dataset, experimenting with different models, and creating evaluation scripts for accuracy, inference time and frames per second.
+</p>
+<p align="justify">
+Aranya contributed to getting the project setup on Google Cloud Platform, which we did not end up using. He also contributed to the project setup, dependency management, writing of the blog post, and some of the hyper-parameter runs.
 </p>
 
 ## References
 [1] Humble, R., Shen, M., Latorre, J. A., Darve, E., & Alvarez, J. (2022, November). “Soft Masking for Cost-Constrained Channel Pruning”. In Computer Vision–ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23–27, 2022, Proceedings, Part XI (pp. 641-657). Cham: Springer Nature Switzerland.
+
+
