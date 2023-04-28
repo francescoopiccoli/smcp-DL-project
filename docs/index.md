@@ -55,6 +55,7 @@ The model was trained on **!!!n!!!** epochs. Training time was around 30 minutes
 ## Discussion
 
 ## Distribution of the efforts
+Francesco worked partly on trying to fix the dependencies and environment issues of the authors' code, in the writing of the blog post and the setup of the repo, on running the ablation study, and contributed partly on making the new model run.
 
 ## Conclusion
 
