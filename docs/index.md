@@ -20,13 +20,13 @@ To verify the new method’s accuracy and inference time improvements, the autho
 </p>
 
 <p align="justify">
-Our work focused on testing the effectiveness of the SMCP method on a scaled-down model architecture, ResNet18, and a new dataset: CIFAR10. Our goal was to evaluate whether we could obtain comparable results to those reported in the paper. We analyzed the results for different pruning ratios and learning rates **!!!add or change the hypeparams actually used!!!**. Moreover, we compared the results from the pruned ResNet18 to those obtained when training without pruning. Finally, we also performed an ablation study by training with the SMCP method, without warmup epochs. 
+Our work focused on testing the effectiveness of the SMCP method on a scaled-down model architecture, ResNet18, and a new dataset: CIFAR10. Our goal was to evaluate whether we could obtain comparable results to those reported in the paper. We analyzed the results for different pruning ratios and learning rates. Moreover, we compared the results from the pruned ResNet18 to those obtained when training without pruning. Finally, we also performed an ablation study by training with the SMCP method, without warmup epochs. 
 </p>
 
 
 <p align="center" style="margin-top: 10px; margin-bottom: 10px;">
   <img src="https://raw.githubusercontent.com/NVlabs/SMCP/main/SMCP_teaser.JPG" alt="Comparison of the performance between SMCP and other channel pruning techniques. On the left plot the cost is    measured in FPS, on the right plot in FLOPs." width="50%"/>
-  <p align="center"><em>Figure 1: Comparison of the performance between SMCP and other channel pruning techniques.</em></p>
+  <p align="center"><em>Figure 1: Comparison of the performance between SMCP and other channel pruning techniques from the paper. [1] </em></p>
 </p>
 
 
@@ -38,7 +38,7 @@ Initially, we attempted to run the original authors’ code (available on github
 </p>
 
 <p align="justify">
-In our new code variant of the model architecture and training, we exploited the classes and functions of the Pytorch-lighting and the lighting-bolts packages, used also in the original codebase. We reimplemented only what was strictly necessary to conduct our analysis, eliminating any extra configuration or model personalization options.
+In our new code variant of the model architecture and training, we exploited the classes and functions of the Pytorch-lighting and the lighting-bolts packages, used also in the original codebase. We reimplemented only what was strictly necessary to conduct our analysis, eliminating any extra configuration or model personalization options (which is instead present in the original codebase).
 </p>
 
 <p align="justify">
@@ -47,45 +47,71 @@ As discussed in the Introduction section, there were two major differences betwe
 
 <p align="justify">
 The code was implemented on Google Colab, exploiting the computational power of the free GPU provided.
-The model was trained on **21** epochs. Training time was around 30 minutes. For each different SMCP method hyperparameters configuration, we logged in a csv file the respective train and test loss at each epoch, as well as the Top-1 and Top-5 class accuracy. To measure the FPS, we reutilized the function provided in the authors’ codebase.
+The model was trained on 21 epochs. Training time was around 25/30 minutes. For each different SMCP method hyperparameters configuration, we logged in a csv file the respective train and test loss at each epoch, as well as the Top-1 and Top-5 class accuracy. To measure the FPS, we reutilized the function provided in the authors’ codebase. 
+
+As we scaled down the model, different hyperparameters required to be reset and adapted, such changes were made in the way that seemed most apt and meaningful to us after studying the codebase, the paper and trying different setups, however we acknowledge this as a limitation given our limited expertise in the field and domain, and as we’ll discuss in the later sections we believe this could have influenced the results obtained.
 </p>
 
 ## Results
 ### Pruning ratios 
-We run several tests comparing the performance (top-1 accuracy and FPS) for different pruning ratios (from 0% to 90%) to see how the performance varies, we obtained the values showed in Figure 2.
-The overall trend is in line with that of Figure 1, namely we observe a drop in accuracy and an increase in FPS as the pruning ratio increases, despite the case for <code>pruning_ratio</code> set to 60%, where we observe an outlier value, whose causes are unknown to us. 
-
-Additionally it is hard to assess whether the increase in FPS is in the same order as the one in Figure 1, as we do not have information on the pruning ratios utilized for that figure, however the increase in FPS seems to be limited compared to the decrease in accuracy, which would not encourage the utilization of the SMCP method, except for some specific values (which could be strictly related to the dataset and hyperparamaters utilized), such as from no pruning to 10% <code>pruning_ratio</code>. 
-
-It is hard however to draw general conclusions on whether SMCP does not scale to smaller architectures, as we tested only a specific scenario, and many factors could have contributed to the different performance, such as the hyperparamaters chosen for the smaller architecture, the fitting between the architecture chosen and the dataset...
+<p align="justify">
+We ran several tests comparing the performance (top-1 accuracy and FPS) for different pruning ratios (from 0% to 90%) to see how the performance varies, and we obtained the values shown in Figure 2.
+The overall trend is in line with that of Figure 1, namely we observe a drop in accuracy and an increase in FPS as the pruning ratio increases. The accuracy values are very similar to those of Figure 1, the FPS values are much higher, this is due to the smaller scale of our model. 
+It is hard to assess whether the increase in FPS is in the same order as the one in Figure 1, as we do not have information on the pruning ratios utilized for that figure, however the increase in FPS seems to be limited compared to the decrease in accuracy, which would not encourage the utilization of the SMCP method, except for some specific values (which could be strictly related to the dataset and hyperparameters utilized), such as from no pruning to 10% <code>pruning_ratio</code>. 
+It is difficult however to draw general conclusions on whether SMCP does not scale to smaller architectures (or it does but only for very small pruning ratio values) , as we tested only a specific scenario, and many factors could have contributed to the different performance, such as the hyperparameters chosen for the smaller architecture, the fitting between the architecture chosen and the dataset, and the smaller dataset being used.
+</p>
 
 <p align="center" style="margin-top: 10px; margin-bottom: 10px;">
-  <img src="https://raw.githubusercontent.com/francescoopiccoli/smcp-DL-project/main/Images/top1_fps.png" alt="Top-1 Acc / FPS values for different pruning ratios.." width="45%"/>
+  <img src="https://raw.githubusercontent.com/francescoopiccoli/smcp-DL-project/main/Images/top1_fps_plot.png" alt="Top-1 Acc / FPS values for different pruning ratios.." width="45%"/>
   <p align="center"><em>Figure 2: Top-1 Acc / FPS values for different pruning ratios.</em></p>
 </p>
 
 ### Ablation study: Running without warmup epochs
+<p align="justify">
 In the paper, before applying the SMCP method, a number of warmup epochs (around 1/9 of the total epochs) is set, during these epochs, the model is trained without applying SMCP, we tested whether removing the warmup phase would affect the accuracy and fps performance.
+
 In particular we tested the scenario with a very high pruning_ratio (0.8), to amplify the possible difference between warmup and no warmup case. 
 We obtained the following values:
-| Scenario | Top-1 Acc | FPS |
-| --------------- | --------------- | --------------- |
-| no-warmup |   | 7736  |
-| warmup  | 0,6736  | 7737  |
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Top-1 Acc</th>
+      <th>FPS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>no-warmup</td>
+      <td>0,7427</td>
+      <td>7736</td>
+    </tr>
+    <tr>
+      <td>warmup</td>
+      <td>0,6736</td>
+      <td>7737</td>
+    </tr>
+  </tbody>
+</table>
 
-**!!!Comment on the results when I have the top1 acc for no warmup!!!**
+<p align="justify">
+Our ablation study showed that the classifier performs better when there is no warmup. This is not the result we expected. Since the intuition behind the warmup, to get a sense of which weights are important, is sound it was surprising to find this did not lead to improved performance. There are a few reasons why this might be the case however. Firstly, the warmup period might lead to overfitting in some way. This is not a likely reason, but the pruning could lead to increased resilience during inference. A second related reason is that learned redundant features could lead to decreased performance, and pruning could be alleviated. This result is highly unexpected, and defies expectations. Varying different hyperparameters with and without a warmup would answer some of the questions raised by this result. Since there seem to be no tradeoffs to not using a warmup, and it increases accuracy, it seems that the results of the paper could potentially have been understated. 
+</p>
 
 ## Discussion and Conclusion
 
-We managed to partially replicate some of the results in the paper, with several limitations and differences **!!!Discuss the results!!!**
+<p align="justify">
+We managed to partially replicate some of the results in the paper, with several limitations and differences, as discussed for Figure 2 in the Implementation section. We encountered several technical issues and making the code run took plenty of time, this also limited our analysis and our ability to reproduce and investigate the paper results. Specifically, we deem that the high number of hyperparameters which required to be reset (due to the new architecture and dataset) could have influenced the results we obtained, and it would have required more tests to find proper values for such hyperparameters. 
+</p>
 
-Our ablation study showed that **!!!To be finished!!!**
-
-We encoutered several technical issues and making the code run took plenty of time, this also limited our study and our ability to reproduce and investigate the paper results.  
 
 ## Distribution of the efforts
-Francesco worked partly on trying to fix the dependencies and environment issues of the authors' code, in the writing of the blog post and the setup of the repo, on running the ablation study, and contributed partly on making the new model run.
+<p align="justify">
+Francesco worked partly on trying to fix the dependencies and environment issues of the authors' code, in the writing of the blog post and the setup of the repository, on running the ablation study, and contributed partly on making the new model run.
+
+Marcus worked mainly on reproducing the paper, adapting it to the new dataset, and experimenting with different models.
+</p>
 
 ## References
-Humble, R., Shen, M., Latorre, J. A., Darve, E., & Alvarez, J. (2022, November). “Soft Masking for Cost-Constrained Channel Pruning”. In Computer Vision–ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23–27, 2022, Proceedings, Part XI (pp. 641-657). Cham: Springer Nature Switzerland.
-
+[1] Humble, R., Shen, M., Latorre, J. A., Darve, E., & Alvarez, J. (2022, November). “Soft Masking for Cost-Constrained Channel Pruning”. In Computer Vision–ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23–27, 2022, Proceedings, Part XI (pp. 641-657). Cham: Springer Nature Switzerland.
